@@ -165,14 +165,9 @@ for epoch in range(start_epoch, opt.OPTIM.NUM_EPOCHS + 1):
 
         # Compute loss at each stage
         loss = 0
-        tmp = [
-            criterion(torch.clamp(restored[j], 0, 1), target)
-            for j in range(len(restored))
-        ]
-
-        for val in tmp:
-            loss = loss + val
-
+        for j in range(len(restored)):
+            lost = loss + criterion(torch.clamp(restored[j],0,1),target)
+      
         loss.backward()
         optimizer.step()
         wandb.log({"loss": loss.item()}, step=epoch * len(train_loader) + i)
