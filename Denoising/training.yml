@@ -2,7 +2,7 @@
 ## 
 ####
 
-GPU: [0,1,2,3]
+GPU: [0]
 
 VERBOSE: True
 
@@ -24,7 +24,7 @@ TRAINING:
   RESUME: False
   TRAIN_PS: 128
   VAL_PS: 256
-  TRAIN_DIR: './Datasets/SIDD/train' # path to training data
-  VAL_DIR: './Datasets/SIDD/val'     # path to validation data
-  SAVE_DIR: './checkpoints'          # path to save models and images
+  TRAIN_DIR: '/nfs/stak/users/vuonga2/datasets/celeba_prepared/mpr_symlink/train/t100' # path to training data
+  VAL_DIR: '/nfs/stak/users/vuonga2/datasets/celeba_prepared/mpr_symlink/test/t100'     # path to validation data
+  SAVE_DIR: './checkpoints/celeba_t100'          # path to save models and images
   # SAVE_IMAGES: False
