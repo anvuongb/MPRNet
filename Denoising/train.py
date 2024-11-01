@@ -76,7 +76,7 @@ scheduler_cosine = optim.lr_scheduler.CosineAnnealingLR(
 scheduler = GradualWarmupScheduler(
     optimizer, multiplier=1, total_epoch=warmup_epochs, after_scheduler=scheduler_cosine
 )
-scheduler.step()
+# scheduler.step()
 
 ######### Resume ###########
 if opt.TRAINING.RESUME:
@@ -166,13 +166,13 @@ for epoch in range(start_epoch, opt.OPTIM.NUM_EPOCHS + 1):
         # Compute loss at each stage
         loss = 0
         for j in range(len(restored)):
-            lost = loss + criterion(torch.clamp(restored[j],0,1),target)
+            loss = loss + criterion(torch.clamp(restored[j],0,1),target)
       
         loss.backward()
         optimizer.step()
         wandb.log({"loss": loss.item()}, step=epoch * len(train_loader) + i)
         wandb.log(
-            {"learning_rate": optimizer.param_groups[-1]["lr"]},
+            {"learning_rate": scheduler.get_lr()[0]},
             step=epoch * len(train_loader) + i,
         )
         epoch_loss += loss.item()
