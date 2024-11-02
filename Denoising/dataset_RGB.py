@@ -6,6 +6,8 @@ from PIL import Image
 import torchvision.transforms.functional as TF
 from pdb import set_trace as stx
 import random
+import sys
+import win32com.client 
 
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in ['jpeg', 'JPEG', 'jpg', 'png', 'JPG', 'PNG', 'gif'])
@@ -14,11 +16,29 @@ class DataLoaderTrain(Dataset):
     def __init__(self, rgb_dir, img_options=None):
         super(DataLoaderTrain, self).__init__()
 
-        inp_files = sorted(os.listdir(os.path.join(rgb_dir, 'input')))
-        tar_files = sorted(os.listdir(os.path.join(rgb_dir, 'target')))
+        if os.name != "nt":
+            # Linux filepath
+            inp_files = sorted(os.listdir(os.path.join(rgb_dir, 'input')))
+            tar_files = sorted(os.listdir(os.path.join(rgb_dir, 'target')))
 
-        self.inp_filenames = [os.path.join(rgb_dir, 'input', x)  for x in inp_files if is_image_file(x)]
-        self.tar_filenames = [os.path.join(rgb_dir, 'target', x) for x in tar_files if is_image_file(x)]
+            self.inp_filenames = [os.path.join(rgb_dir, 'input', x)  for x in inp_files if is_image_file(x)]
+            self.tar_filenames = [os.path.join(rgb_dir, 'target', x) for x in tar_files if is_image_file(x)]
+        else:
+            # translate to windows filepath
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(rgb_dir +'\\'+ 'input.lnk')
+            input_dir = shortcut.Targetpath
+            shortcut = shell.CreateShortCut(rgb_dir +'\\'+ 'target.lnk')
+            target_dir = shortcut.Targetpath
+
+            inp_files = sorted(os.listdir(input_dir))
+            tar_files = sorted(os.listdir(target_dir))
+            
+            self.inp_filenames = [os.path.join(input_dir, x)  for x in inp_files if is_image_file(x)]
+            self.tar_filenames = [os.path.join(target_dir, x) for x in tar_files if is_image_file(x)]
+        
+        self.inp_filenames = [os.path.join(input_dir, x)  for x in inp_files if is_image_file(x)]
+        self.tar_filenames = [os.path.join(target_dir, x) for x in tar_files if is_image_file(x)]
 
         self.img_options = img_options
         self.sizex       = len(self.tar_filenames)  # get the size of target
@@ -91,11 +111,26 @@ class DataLoaderVal(Dataset):
     def __init__(self, rgb_dir, img_options=None, rgb_dir2=None):
         super(DataLoaderVal, self).__init__()
 
-        inp_files = sorted(os.listdir(os.path.join(rgb_dir, 'input')))
-        tar_files = sorted(os.listdir(os.path.join(rgb_dir, 'target')))
+        if os.name != "nt":
+            # Linux filepath
+            inp_files = sorted(os.listdir(os.path.join(rgb_dir, 'input')))
+            tar_files = sorted(os.listdir(os.path.join(rgb_dir, 'target')))
 
-        self.inp_filenames = [os.path.join(rgb_dir, 'input', x)  for x in inp_files if is_image_file(x)]
-        self.tar_filenames = [os.path.join(rgb_dir, 'target', x) for x in tar_files if is_image_file(x)]
+            self.inp_filenames = [os.path.join(rgb_dir, 'input', x)  for x in inp_files if is_image_file(x)]
+            self.tar_filenames = [os.path.join(rgb_dir, 'target', x) for x in tar_files if is_image_file(x)]
+        else:
+            # translate to windows filepath
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(rgb_dir +'\\'+ 'input.lnk')
+            input_dir = shortcut.Targetpath
+            shortcut = shell.CreateShortCut(rgb_dir +'\\'+ 'target.lnk')
+            target_dir = shortcut.Targetpath
+
+            inp_files = sorted(os.listdir(input_dir))
+            tar_files = sorted(os.listdir(target_dir))
+            
+            self.inp_filenames = [os.path.join(input_dir, x)  for x in inp_files if is_image_file(x)]
+            self.tar_filenames = [os.path.join(target_dir, x) for x in tar_files if is_image_file(x)]
 
         self.img_options = img_options
         self.sizex       = len(self.tar_filenames)  # get the size of target
