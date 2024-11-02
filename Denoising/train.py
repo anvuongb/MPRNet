@@ -69,14 +69,18 @@ optimizer = optim.Adam(
 
 
 ######### Scheduler ###########
-warmup_epochs = 3
-scheduler_cosine = optim.lr_scheduler.CosineAnnealingLR(
-    optimizer, opt.OPTIM.NUM_EPOCHS - warmup_epochs + 40, eta_min=opt.OPTIM.LR_MIN
+# warmup_epochs = 3
+# scheduler_cosine = optim.lr_scheduler.CosineAnnealingLR(
+#     optimizer, opt.OPTIM.NUM_EPOCHS - warmup_epochs + 40, eta_min=opt.OPTIM.LR_MIN
+# )
+# scheduler = GradualWarmupScheduler(
+#     optimizer, multiplier=1, total_epoch=warmup_epochs, after_scheduler=scheduler_cosine
+# )
+scheduler = optim.lr_scheduler.CosineAnnealingLR(
+    optimizer, opt.OPTIM.NUM_EPOCHS + 40, eta_min=opt.OPTIM.LR_MIN
 )
-scheduler = GradualWarmupScheduler(
-    optimizer, multiplier=1, total_epoch=warmup_epochs, after_scheduler=scheduler_cosine
-)
-# scheduler.step()
+
+scheduler.step()
 
 ######### Resume ###########
 if opt.TRAINING.RESUME:
