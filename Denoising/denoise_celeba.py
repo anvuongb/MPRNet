@@ -85,7 +85,7 @@ class CelebADataset(Dataset):
         self.img_dir = img_dir
         self.img_paths = os.listdir(img_dir)
         self.img_paths = [
-            os.path.join(img_dir, f) for f in self.img_paths if f.endswith(".png")
+            os.path.join(img_dir, f"{idx}.png") for idx in range(2096)
         ]
 
     def __len__(self):
